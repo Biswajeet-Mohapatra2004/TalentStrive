@@ -1,0 +1,66 @@
+package com.Biswajeet.JobBoardApplication.Config;
+import com.Biswajeet.JobBoardApplication.Services.JwtTokenServices;
+import com.Biswajeet.JobBoardApplication.Services.MyEmployerDetailsService;
+import com.Biswajeet.JobBoardApplication.Services.MyUserDetailsService;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.stereotype.Component;
+import org.springframework.web.filter.OncePerRequestFilter;
+
+import java.io.IOException;
+@Component
+public class JwtAuthenticationFilter extends OncePerRequestFilter {
+
+    @Autowired
+    private JwtTokenServices jwtService;
+
+    @Autowired
+    private MyUserDetailsService userDetailsService;
+
+    @Autowired
+    private MyEmployerDetailsService employerDetailsService;
+
+    @Override
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        String authHeader = request.getHeader("Authorization");
+        String token = null;
+        String username = null;
+
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            token = authHeader.substring(7);
+            username = jwtService.extractUsername(token);
+        }
+
+        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+            // Determine if the username belongs to an employer or user
+            UserDetails userDetails = getUserOrEmployerDetails(username);
+
+            if (userDetails != null && jwtService.validateToken(token, userDetails)) {
+                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                SecurityContextHolder.getContext().setAuthentication(authToken);
+            }
+        }
+
+        filterChain.doFilter(request, response);
+    }
+
+    private UserDetails getUserOrEmployerDetails(String username) {
+        // First check if it's an employer, otherwise assume it's a user
+        if (employerDetailsService.employerExist(username)) {
+            return employerDetailsService.loadUserByUsername(username);
+        } else if (userDetailsService.userExists(username)) {
+            return userDetailsService.loadUserByUsername(username);
+        } else {
+            throw new UsernameNotFoundException("User or employer not found: " + username);
+        }
+    }
+}

@@ -11,6 +11,7 @@ public class ApplicationDTO {
     private Long jobPostId;
     private String title;
     private String status;
+    private String Company;
     private Long employerId;
 
     public Long getEmployerId() {
@@ -69,6 +70,14 @@ public class ApplicationDTO {
         this.title = title;
     }
 
+    public String getCompany() {
+        return Company;
+    }
+
+    public void setCompany(String company) {
+        Company = company;
+    }
+
     @Override
     public String toString() {
         return "ApplicationDTO{" +
@@ -78,6 +87,7 @@ public class ApplicationDTO {
                 ", jobPostId=" + jobPostId +
                 ", title='" + title + '\'' +
                 ", status='" + status + '\'' +
+                ", Company='" + Company + '\'' +
                 ", employerId=" + employerId +
                 '}';
     }

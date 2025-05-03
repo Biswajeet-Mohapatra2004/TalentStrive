@@ -45,7 +45,7 @@ public class ApplicationServices {
               dto.setTitle(post.getTitle());
               dto.setStatus(forms.getStatus());
               dto.setEmployerId(forms.getJobPost().getEmployer().getId());
-
+              dto.setCompany(forms.getJobPost().getCompany().getName());
               // setting the client name
               dto.setApplicantName(forms.getUser().getName());
 

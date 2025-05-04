@@ -5,8 +5,10 @@ import com.Biswajeet.JobBoardApplication.Model.JobPostSchema;
 import com.Biswajeet.JobBoardApplication.Repository.JobPostSchemaRepository;
 import com.Biswajeet.JobBoardApplication.Services.JobPostSchemaServices;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -23,5 +25,10 @@ public class JobController {
     @GetMapping(path = "/jobs/viewAll" , produces = "application/json")
     public List<JobPostDTO> getAllJobs(){
         return services.findAllJobs();
+    }
+
+    @GetMapping(path = "/job/{id}/generate",produces = MediaType.APPLICATION_JSON_VALUE)
+    public String[] generateDescription(@PathVariable Long id){
+        return services.generateJobDescription(id);
     }
 }

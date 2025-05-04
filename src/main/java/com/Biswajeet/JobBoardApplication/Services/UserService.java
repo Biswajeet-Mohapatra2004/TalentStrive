@@ -27,11 +27,13 @@ public class UserService {
     @Autowired
     private ApplicationRepository applicationRepository;
 
+    private BCryptPasswordEncoder encoder= new BCryptPasswordEncoder(12);
+
 
     public void applyForJob(Application application) {
         applicationRepository.save(application);
     }
-    private BCryptPasswordEncoder encoder= new BCryptPasswordEncoder(12);
+
     public void registerUser(Users user) {
         user.setPassword(encoder.encode(user.getPassword()));
         userRepo.save(user);
@@ -41,8 +43,11 @@ public class UserService {
         return userRepo.findById(id);
     }
 
-    public void updateUser(Users user) {
-        userRepo.save(user);
+    public void updateUser(Users old_user,Users new_user) {
+        old_user.setName(new_user.getName());
+        old_user.setUsername(new_user.getUsername());
+        old_user.setRole(new_user.getRole());
+        userRepo.save(old_user);
     }
 
     public void deleteUser(Long id) {

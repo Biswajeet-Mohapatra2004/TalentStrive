@@ -187,7 +187,7 @@ public class UserController {
         return jobService.findReleventJobsByTitle(title);
     }
 
-    @PutMapping(path = "/user/password",consumes = "application/json")
+    @PostMapping(path = "/user/password",consumes = "application/json")
     public ResponseEntity<String> updatePassword(@RequestBody Map<String, String> requestBody, HttpServletRequest request){
         String token=extractToken(request);
         String username=jwtTokenServices.extractUsername(token);

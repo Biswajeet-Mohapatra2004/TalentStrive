@@ -115,7 +115,7 @@ public class UserController {
         if(username.isEmpty() || service.findUserByUserName(username) == null){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User with the username not found!!");
         }
-        service.updateUser(service.findByUsername(username),user);
+        service.updateUser(service.findUserByUserName(username),user);
         return ResponseEntity.ok("User Updated successfully!!");
     }
 

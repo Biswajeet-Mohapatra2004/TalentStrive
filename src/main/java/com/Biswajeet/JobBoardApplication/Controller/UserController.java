@@ -130,6 +130,17 @@ public class UserController {
         service.deleteUser(user.getId());
         return ResponseEntity.ok("User Deleted!!");
     }
+    @DeleteMapping(path = "/user/application/{applicationId}/delete",produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> deleteApplication(@PathVariable Long applicationId, HttpServletRequest request){
+        String token=extractToken(request);
+        String username=jwtTokenServices.extractUsername(token);
+        if(username.isEmpty() || service.findByUsername(username)==null){
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Invalid JWT Credentials. Login again!!");
+        }
+        Long userId=service.findByUsername(username).getId();
+        service.deleteApplication(userId,applicationId);
+        return ResponseEntity.status(HttpStatus.OK).body("The application has been deleted!!");
+    }
 
     @DeleteMapping(path = "/user/application/deleteAll")
     public ResponseEntity<String> DeleteAllApplications(HttpServletRequest request){

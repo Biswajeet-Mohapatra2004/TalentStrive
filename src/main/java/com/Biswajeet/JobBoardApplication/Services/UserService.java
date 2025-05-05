@@ -1,5 +1,4 @@
 package com.Biswajeet.JobBoardApplication.Services;
-
 import com.Biswajeet.JobBoardApplication.DTO.JobPostDTO;
 import com.Biswajeet.JobBoardApplication.Model.Application;
 import com.Biswajeet.JobBoardApplication.Model.JobPostSchema;
@@ -83,5 +82,10 @@ public class UserService {
 
     public Users findByUsername(String username) {
         return userRepo.findByUsername(username);
+    }
+
+    public void deleteApplication(Long userId, Long applicationId) {
+       List<Application> applications= applicationRepository.findApplicationByUserId(userId);
+       System.out.println(applications);
     }
 }

@@ -120,7 +120,7 @@ public class JobPostSchemaServices {
                 "Do not include any company benefits, application instructions, or promotional language.\n" +
                 "Focus on the job title, responsibilities, required skills, qualifications, location, job type (e.g., full-time/internship), and experience level.\n" +
                 "Return the response strictly as a JSON object with a single field: \"jobDescription\" containing a properly formatted, human-readable string with paragraphs and bullet points where appropriate.\n" +
-                "The output should be directly embeddable and require no further editing.";
+                "The output should be directly embeddable and require no further editing. provide description within 100 words";
         return geminiIntegrationService.getQuery(message,jobPostDTO.toString());
     }
 }

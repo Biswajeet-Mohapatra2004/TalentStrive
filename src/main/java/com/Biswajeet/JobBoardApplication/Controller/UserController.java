@@ -25,6 +25,8 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.print.attribute.standard.Media;
+
 
 @RestController
 @CrossOrigin(origins = "http://localhost:5173")
@@ -130,15 +132,15 @@ public class UserController {
         service.deleteUser(user.getId());
         return ResponseEntity.ok("User Deleted!!");
     }
-    @DeleteMapping(path = "/user/application/{applicationId}/delete",produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> deleteApplication(@PathVariable Long applicationId, HttpServletRequest request){
+    @DeleteMapping(path = "/user/application/delete",consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> deleteApplication(@RequestBody ApplicationDTO application, HttpServletRequest request){
         String token=extractToken(request);
         String username=jwtTokenServices.extractUsername(token);
         if(username.isEmpty() || service.findByUsername(username)==null){
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Invalid JWT Credentials. Login again!!");
         }
         Long userId=service.findByUsername(username).getId();
-        service.deleteApplication(userId,applicationId);
+        service.deleteApplication(userId,application);
         return ResponseEntity.status(HttpStatus.OK).body("The application has been deleted!!");
     }
 
@@ -168,8 +170,7 @@ public class UserController {
             Users applicationForm=new Users();
             applicationForm.setId(user.getId());
             application.setUser(applicationForm);
-
-            service.applyForJob(application);
+            service.applyForJob(application,user);
             String emailID=application.getUser().getUsername();
             String clientName=application.getUser().getName();
             String company=application.getJobPost().getCompany().getName();

@@ -1,4 +1,5 @@
 package com.Biswajeet.JobBoardApplication.Services;
+import com.Biswajeet.JobBoardApplication.DTO.ApplicationDTO;
 import com.Biswajeet.JobBoardApplication.DTO.JobPostDTO;
 import com.Biswajeet.JobBoardApplication.Model.Application;
 import com.Biswajeet.JobBoardApplication.Model.JobPostSchema;
@@ -29,8 +30,9 @@ public class UserService {
     private BCryptPasswordEncoder encoder= new BCryptPasswordEncoder(12);
 
 
-    public void applyForJob(Application application) {
+    public void applyForJob(Application application,Users users) {
         applicationRepository.save(application);
+        users.setApplications(application);
     }
 
     public void registerUser(Users user) {
@@ -84,8 +86,14 @@ public class UserService {
         return userRepo.findByUsername(username);
     }
 
-    public void deleteApplication(Long userId, Long applicationId) {
-       List<Application> applications= applicationRepository.findApplicationByUserId(userId);
-       System.out.println(applications);
+    public void deleteApplication(Long userId, ApplicationDTO applicationDTO) {
+       Optional<Application> application=applicationRepository.findById(applicationDTO.getId());
+       Optional<Users> user=userRepo.findById(userId);
+
+       user.get().removeApplication(application.get());
+       userRepo.save(user.get());
+       applicationRepository.deleteById(applicationDTO.getId());
+
+
     }
 }

@@ -1,8 +1,11 @@
 package com.Biswajeet.JobBoardApplication.Model;
 
+import com.Biswajeet.JobBoardApplication.DTO.ApplicationDTO;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 @Entity
@@ -18,9 +21,9 @@ public class Users {
     private String role; // e.g., JOB_SEEKER, ADMIN
 
     @OneToMany(mappedBy = "user")
-    private List<Application> applications;
+    private List<Application> applications = new ArrayList<>();
 
-    // Constructors, getters, setters, etc.
+
 
     public Users() {
     }
@@ -71,6 +74,16 @@ public class Users {
     public void setRole(String role) {
         this.role = role;
     }
+
+   public List<Application> getApplications(){
+        return applications;
+   }
+   public void setApplications(Application application){
+        applications.add(application);
+   }
+   public void removeApplication(Application application){
+        applications.remove(application);
+   }
 
     @Override
     public String toString() {

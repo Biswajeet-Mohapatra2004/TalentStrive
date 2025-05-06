@@ -32,7 +32,7 @@ public class SecurityConfiguration {
         http.csrf(csrf -> csrf.disable());
 
         http.authorizeHttpRequests((request) -> {
-            request.requestMatchers("/user/profile","/allUser","/employer/register","/employer/login","/user/login", "/user/register", "/jobs/**","/job/**", "/job/search/**","/company/register" ,"/company/add-all","/company/viewAll","/company/**").permitAll();
+            request.requestMatchers("/allUser","/employer/register","/employer/login","/user/login", "/user/register", "/jobs/**","/job/**", "/job/search/**","/company/register" ,"/company/add-all","/company/viewAll","/company/**").permitAll();
             request.anyRequest().authenticated();
         });
 

@@ -1,6 +1,7 @@
 package com.Biswajeet.JobBoardApplication.Services;
 import com.Biswajeet.JobBoardApplication.DTO.ApplicationDTO;
 import com.Biswajeet.JobBoardApplication.DTO.JobPostDTO;
+import com.Biswajeet.JobBoardApplication.DTO.UserDTO;
 import com.Biswajeet.JobBoardApplication.Model.Application;
 import com.Biswajeet.JobBoardApplication.Model.JobPostSchema;
 import com.Biswajeet.JobBoardApplication.Model.Users;
@@ -41,7 +42,8 @@ public class UserService {
     }
 
     public Optional<Users> findUserById(Long id) {
-        return userRepo.findById(id);
+       return userRepo.findById(id);
+
     }
 
     public void updateUser(Users old_user,Users new_user) {
@@ -84,6 +86,17 @@ public class UserService {
 
     public Users findByUsername(String username) {
         return userRepo.findByUsername(username);
+    }
+    public UserDTO getProfileDto(String username){
+        Users user= userRepo.findByUsername(username);
+        UserDTO userDTO=new UserDTO();
+
+        userDTO.setApplications(user.getApplications());
+        userDTO.setName(user.getName());
+        userDTO.setUsername(user.getUsername());
+        userDTO.setRole(user.getRole());
+        userDTO.setId(user.getId());
+        return userDTO;
     }
 
     public void deleteApplication(Long userId, ApplicationDTO applicationDTO) {

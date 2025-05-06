@@ -2,6 +2,7 @@ package com.Biswajeet.JobBoardApplication.Controller;
 import com.Biswajeet.JobBoardApplication.DTO.ApplicationDTO;
 import com.Biswajeet.JobBoardApplication.DTO.JobPostDTO;
 import com.Biswajeet.JobBoardApplication.DTO.MailTemplate;
+import com.Biswajeet.JobBoardApplication.DTO.UserDTO;
 import com.Biswajeet.JobBoardApplication.Model.Application;
 import com.Biswajeet.JobBoardApplication.Model.CustomMultipartFile;
 import com.Biswajeet.JobBoardApplication.Model.File;
@@ -15,12 +16,14 @@ import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -98,13 +101,13 @@ public class UserController {
        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Could not authorise with the credentials provided!!");
     }
      @GetMapping(path = "/user/profile",produces = "application/json")
-     public ResponseEntity<Users> getProfileData(HttpServletRequest request){
+     public ResponseEntity<UserDTO> getProfileData(HttpServletRequest request){
          String token= extractToken(request);
          String username=jwtTokenServices.extractUsername(token);
          if(username.isEmpty() || service.findUserByUserName(username)==null){
              return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
          }
-         Users userDetails=service.findUserByUserName(username);
+         UserDTO userDetails=service.getProfileDto(username);
          return ResponseEntity.status(HttpStatus.ACCEPTED).body(userDetails);
      }
 

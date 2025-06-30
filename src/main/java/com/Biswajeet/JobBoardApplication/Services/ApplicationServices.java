@@ -54,6 +54,32 @@ public class ApplicationServices {
           return applications;
     }
 
+    public List<ApplicationDTO> showApplicationsByUser(Long userid){
+        List<ApplicationDTO> applied_jobs=new ArrayList<>();
+        List<Application> applicationsByUser=repo.findApplicationByUserId(userid);
+
+        for(Application application:applicationsByUser){
+            ApplicationDTO applicationDTO;
+            applicationDTO = new ApplicationDTO();
+
+            applicationDTO.setId(application.getId());
+            applicationDTO.setUserId(application.getUser().getId());
+            applicationDTO.setJobPostId(application.getJobPost().getId());
+
+            JobPostSchema post=application.getJobPost();
+
+            applicationDTO.setTitle(post.getTitle());
+            applicationDTO.setStatus(application.getStatus());
+            applicationDTO.setEmployerId(application.getJobPost().getEmployer().getId());
+            applicationDTO.setCompany(application.getJobPost().getCompany().getName());
+            // setting the client name
+            applicationDTO.setApplicantName(application.getUser().getName());
+            applied_jobs.add(applicationDTO);
+        }
+        return applied_jobs;
+
+    }
+
     public void DeleteAllApplications(Long id){
         repo.deleteByUserId(id);
     }

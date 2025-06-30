@@ -1,8 +1,5 @@
 package com.Biswajeet.JobBoardApplication.Controller;
-import com.Biswajeet.JobBoardApplication.DTO.ApplicationDTO;
-import com.Biswajeet.JobBoardApplication.DTO.JobPostDTO;
-import com.Biswajeet.JobBoardApplication.DTO.MailTemplate;
-import com.Biswajeet.JobBoardApplication.DTO.UserDTO;
+import com.Biswajeet.JobBoardApplication.DTO.*;
 import com.Biswajeet.JobBoardApplication.Model.Application;
 import com.Biswajeet.JobBoardApplication.Model.CustomMultipartFile;
 import com.Biswajeet.JobBoardApplication.Model.File;
@@ -76,14 +73,19 @@ public class UserController {
 
 
     @PostMapping(path = "/user/register", consumes = "application/json")
-    public ResponseEntity<String> register(@RequestBody Users user){
-        if(user.getUsername()==null||user.getName()==null||user.getPassword()==null||user.getRole()==null){
+    public ResponseEntity<String> register(@RequestBody UserRegisterDTO userRegisterDTO){
+        if(userRegisterDTO.getUsername()==null||userRegisterDTO.getName()==null||userRegisterDTO.getPassword()==null||userRegisterDTO.getRole()==null){
            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error!!. User profile data cannot be empty.");
         }
+        Users user=new Users();
+        user.setUsername(userRegisterDTO.getUsername());
+        user.setName(userRegisterDTO.getName());
+        user.setRole(userRegisterDTO.getRole());
+        user.setPassword(userRegisterDTO.getPassword());
         service.registerUser(user);
 
         try{
-            emailService.sendMail(user.getUsername(),"TalenStrive profile created",template.Register());
+            emailService.sendMail(user.getUsername(),"TalentStrive profile created",template.Register());
         }catch (Exception e){
             System.out.println(e);
         }
@@ -194,7 +196,7 @@ public class UserController {
         if(username.isEmpty() || service.findUserByUserName(username)==null){
             return  ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
         }
-       return ResponseEntity.status(HttpStatus.OK).body(applicationServices.showAllApplications());
+       return ResponseEntity.status(HttpStatus.OK).body(applicationServices.showApplicationsByUser(service.findByUsername(username).getId()));
     }
 
     @GetMapping(path = "user/job/{title}",produces = "application/json")

@@ -14,4 +14,7 @@ public interface ApplicationRepository extends JpaRepository<Application,Long> {
 
     @Query("SELECT a FROM Application a WHERE a.user.id = :userid")
     List<Application> findApplicationByUserId(@Param("userid") Long userId);
+
+    @Query("SELECT a FROM Application a WHERE a.jobPost.employer.id = :empId ")
+    List<Application> findApplicationByEmployerId(@Param("empId") Long id);
 }

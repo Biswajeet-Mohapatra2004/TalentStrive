@@ -22,7 +22,7 @@ public class Application {
     private JobPostSchema jobPost;
 
 
-    private String status; // e.g., PENDING, ACCEPTED, REJECTED
+    private String status;
 
     public Long getId() {
         return id;

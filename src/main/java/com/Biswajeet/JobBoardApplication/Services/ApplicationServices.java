@@ -7,6 +7,7 @@ import com.Biswajeet.JobBoardApplication.Model.Application;
 import com.Biswajeet.JobBoardApplication.Model.JobPostSchema;
 import com.Biswajeet.JobBoardApplication.Model.Users;
 import com.Biswajeet.JobBoardApplication.Repository.ApplicationRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
@@ -86,13 +87,11 @@ public class ApplicationServices {
 
     public List<ApplicationDTO> showApplicationsOfEmployer(Long id) {
 
-        List<Application> data=repo.findAll();
+        List<Application> data=repo.findApplicationByEmployerId(id);
         List<ApplicationDTO> applications= new ArrayList<>();
 
         for(Application forms:data){
-            if(forms.getJobPost().getEmployer().getId().equals(id)){
                 ApplicationDTO dto = new ApplicationDTO();
-
                 dto.setEmployerId(id);
                 dto.setUserId(forms.getUser().getId());
                 dto.setApplicantName(forms.getUser().getName());
@@ -101,7 +100,6 @@ public class ApplicationServices {
                 dto.setId(forms.getId());
                 dto.setJobPostId(forms.getJobPost().getId());
                 applications.add(dto);
-            }
         }
         return  applications;
     }
@@ -124,8 +122,7 @@ public class ApplicationServices {
             return dto;
         }
         else {
-            return null;
-            //   throw new EntityNotFoundException("Application with ID " + id + " not found.");
+               throw new EntityNotFoundException("Application with ID " + id + " not found.");
         }
     }
 
@@ -138,7 +135,7 @@ public class ApplicationServices {
             repo.save(application);
         } else {
               System.out.println("Application not found");
-//            throw new EntityNotFoundException("Application with ID " + id + " not found.");
+            throw new EntityNotFoundException("Application with ID " + id + " not found.");
         }
     }
 
@@ -148,14 +145,19 @@ public class ApplicationServices {
         List<Long> userIds=new ArrayList<>();
         String jobName="";
         for(ApplicationDTO application:applications){
-            if(application.getJobPostId().equals(jobPostId) && application.getStatus().equals("ACCEPTED")){
+            if(application.getJobPostId().equals(jobPostId) && application.getStatus().equals("Shortlisted")){
                 userIds.add(application.getUserId());
                 jobName=application.getTitle();
             }
         }
         for(Long id:userIds){
             Optional<Users> user=userService.findUserById(id);
-            emailService.sendMail(user.get().getUsername(),"Complete the assessment for "+jobName,mailTemplate.assessmentToApplicants(user.get().getName(),url));
+            try{
+                emailService.sendMail(user.get().getUsername(),"Complete the assessment for "+jobName,mailTemplate.assessmentToApplicants(user.get().getName(),url));
+            }
+            catch (Exception e){
+                System.out.println(e);
+            }
         }
 
     }

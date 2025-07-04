@@ -3,6 +3,7 @@ package com.Biswajeet.JobBoardApplication.Services;
 import com.Biswajeet.JobBoardApplication.DTO.EmployerDTO;
 import com.Biswajeet.JobBoardApplication.DTO.JobPostDTO;
 import com.Biswajeet.JobBoardApplication.DTO.MailTemplate;
+import com.Biswajeet.JobBoardApplication.Model.Application;
 import com.Biswajeet.JobBoardApplication.Model.Employer;
 import com.Biswajeet.JobBoardApplication.Model.JobPostSchema;
 import com.Biswajeet.JobBoardApplication.Model.Users;
@@ -58,26 +59,6 @@ public class EmployerService {
        jobRepo.save(jobPost);
     }
 
-    public EmployerDTO findEmployerById(Long id) {
-        Optional<Employer> employer=repo.findById(id);
-
-        if(employer.isPresent()){
-            Employer emp= employer.get();
-            EmployerDTO dto= new EmployerDTO();
-
-            dto.setName(emp.getName());
-            dto.setId(emp.getId());
-            dto.setUsername(emp.getUsername());
-            dto.setPassword(emp.getPassword());
-            dto.setCompany(emp.getCompany().getName());
-
-            return dto;
-        }
-        else{
-            return null;
-        }
-
-    }
     public void updateProfile(Employer employer) {
         Optional<Employer> emp=repo.findById(employer.getId());
 

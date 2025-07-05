@@ -1,8 +1,5 @@
 package com.Biswajeet.JobBoardApplication.Controller;
-import com.Biswajeet.JobBoardApplication.DTO.ApplicationDTO;
-import com.Biswajeet.JobBoardApplication.DTO.AssessmentDTO;
-import com.Biswajeet.JobBoardApplication.DTO.JobPostDTO;
-import com.Biswajeet.JobBoardApplication.DTO.MailTemplate;
+import com.Biswajeet.JobBoardApplication.DTO.*;
 import com.Biswajeet.JobBoardApplication.Model.Employer;
 import com.Biswajeet.JobBoardApplication.Model.File;
 import com.Biswajeet.JobBoardApplication.Model.JobPostSchema;
@@ -213,6 +210,22 @@ public class EmployerController {
         try{
             service.sendAssessment(id,assessmentDTO.getUrl());
             return ResponseEntity.status(HttpStatus.OK).body("Assessment link has been shared to candidates.");
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Could not send the assessment link!");
+        }
+    }
+
+    @PostMapping(path="/employer/job/{id}/interview" , consumes = "application/json")
+    public ResponseEntity<String> sendInterviewLink(@PathVariable Long id, @RequestBody InterviewDTO interviewDTO, HttpServletRequest request){
+        String token=extractToken(request);
+        String username=jwtTokenServices.extractUsername(token);
+
+        if(username.isEmpty() || service.findEmployerByUserName(username)==null){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Un-authorised access!! detected!!");
+        }
+        try{
+            service.sendInterview(id,interviewDTO);
+            return ResponseEntity.status(HttpStatus.OK).body("Interview link has been shared to candidates.");
         }catch (Exception e){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Could not send the assessment link!");
         }

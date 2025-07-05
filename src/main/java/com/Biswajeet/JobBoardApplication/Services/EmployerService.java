@@ -1,6 +1,7 @@
 package com.Biswajeet.JobBoardApplication.Services;
 
 import com.Biswajeet.JobBoardApplication.DTO.EmployerDTO;
+import com.Biswajeet.JobBoardApplication.DTO.InterviewDTO;
 import com.Biswajeet.JobBoardApplication.DTO.JobPostDTO;
 import com.Biswajeet.JobBoardApplication.DTO.MailTemplate;
 import com.Biswajeet.JobBoardApplication.Model.Application;
@@ -99,6 +100,9 @@ public class EmployerService {
     public void sendAssessment(Long jobPostId,String url) {
          applicationServices.findApplicationsByJobPost(jobPostId,url);
     }
+    public void sendInterview(Long id, InterviewDTO interviewDTO) {
+        applicationServices.findApplicationsByJobPost(id,interviewDTO);
+    }
 
     public void sendReportMail(String[] usernames, Long jobId) {
         JobPostDTO job=jobPostSchemaServices.findJobById(jobId);
@@ -110,4 +114,6 @@ public class EmployerService {
         }
 
     }
+
+
 }

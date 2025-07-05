@@ -1,6 +1,7 @@
 package com.Biswajeet.JobBoardApplication.Services;
 
 import com.Biswajeet.JobBoardApplication.DTO.ApplicationDTO;
+import com.Biswajeet.JobBoardApplication.DTO.InterviewDTO;
 import com.Biswajeet.JobBoardApplication.DTO.JobPostDTO;
 import com.Biswajeet.JobBoardApplication.DTO.MailTemplate;
 import com.Biswajeet.JobBoardApplication.Model.Application;
@@ -154,6 +155,28 @@ public class ApplicationServices {
             Optional<Users> user=userService.findUserById(id);
             try{
                 emailService.sendMail(user.get().getUsername(),"Complete the assessment for "+jobName,mailTemplate.assessmentToApplicants(user.get().getName(),url));
+            }
+            catch (Exception e){
+                System.out.println(e);
+            }
+        }
+
+    }
+
+    public void findApplicationsByJobPost(Long jobPostId, InterviewDTO interviewDTO) {
+        List<ApplicationDTO> applications=showAllApplications();
+        List<Long> userIds=new ArrayList<>();
+        String jobName="";
+        for(ApplicationDTO application:applications){
+            if(application.getJobPostId().equals(jobPostId) && application.getStatus().equals("Interview Scheduled")){
+                userIds.add(application.getUserId());
+                jobName=application.getTitle();
+            }
+        }
+        for(Long id:userIds){
+            Optional<Users> user=userService.findUserById(id);
+            try{
+                emailService.sendMail(user.get().getUsername(),"Complete the interview for "+jobName,mailTemplate.interviewScheduled(jobName,user.get().getName(),interviewDTO.getDate().toString(),interviewDTO.getUrl()));
             }
             catch (Exception e){
                 System.out.println(e);

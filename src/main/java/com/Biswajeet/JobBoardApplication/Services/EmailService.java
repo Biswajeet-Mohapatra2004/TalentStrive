@@ -19,7 +19,7 @@ public class EmailService {
         msg.setText(body);
 
         msg.setFrom("talent.strive.careers@gmail.com");
-        // send the mail using the mailsender
+        // send the mail using the mail sender
         mailSender.send(msg);
     }
 }

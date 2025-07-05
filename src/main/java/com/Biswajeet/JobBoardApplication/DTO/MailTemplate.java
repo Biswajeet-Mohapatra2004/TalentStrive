@@ -154,4 +154,32 @@ public class MailTemplate {
                 "The TalentStrive Team\n" +
                 "talent.strive.careers@gmail.com";
     }
+    public String interviewScheduled(String title, String candidateName, String interviewDate, String interviewUrl) {
+        return "Dear " + candidateName + ",\n\n"
+                + "Congratulations! Your interview for the " + title + " position has been scheduled on " + interviewDate + ".\n"
+                + "Interview Link: " + interviewUrl + "\n\n"
+                + "Please join the interview at the scheduled time. If you have any questions, contact us at talent.strive.careers@gmail.com.\n\n"
+                + "Best regards,\n"
+                + "The TalentStrive Team\n"
+                + "talent.strive.careers@gmail.com";
+    }
+    public String accepted(String title, String candidateName) {
+        return "Dear " + candidateName + ",\n\n"
+                + "Congratulations! We are delighted to inform you that you have accepted the offer for the " + title + " position.\n"
+                + "Welcome to the team! The company HR department will contact you soon with onboarding details.\n\n"
+                + "If you have any questions, feel free to reach out to us at talent.strive.careers@gmail.com.\n\n"
+                + "Best regards,\n"
+                + "The TalentStrive Team\n"
+                + "talent.strive.careers@gmail.com";
+    }
+
+    public String rejected(String title, String candidateName) {
+        return "Dear " + candidateName + ",\n\n"
+                + "Thank you for your interest in the " + title + " position.\n"
+                + "After careful consideration, we regret to inform you that you have not been selected for this role.\n"
+                + "We wish you all the best in your future endeavors.\n\n"
+                + "Best regards,\n"
+                + "The TalentStrive Team\n"
+                + "talent.strive.careers@gmail.com";
+    }
 }
